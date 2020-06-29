@@ -4,7 +4,7 @@
 #include "creationtroncon.h"
 #include "convertion.h"
 #include <math.h>
-#include "graph2.h"
+#include "graph_energy.h"
 using namespace sf;
 using namespace std;
 
@@ -298,12 +298,26 @@ int main() {
                             clock_t temps_initial;
                             clock_t temps_final;
                             temps_initial = clock();
-                            std::vector<int> chemin = chemin_plus_court(ttlesextremite, ttlestroncon, depart, arrivee);
+                            double* energie = new double;
+                            double* distance = new double;
+                            int* temps_parcours = new int;
+                            std::vector<int> chemin = chemin_plus_court(ttlesextremite, ttlestroncon, depart, arrivee, energie, distance, temps_parcours);
                             temps_final = clock();
-                            clock_t temps_CPU = (temps_final - temps_initial) / CLOCKS_PER_SEC;
-                            std::cout << "temps de calcul : " << temps_CPU << "s" << std::endl;
+                            clock_t temps_CPU = (temps_final - temps_initial) * 1000 / CLOCKS_PER_SEC;
+                            std::cout << "temps de calcul : " << temps_CPU<< "ms" << std::endl;
                             std::cout << "chemin calcul�" << std::endl;
-                            for (int i = 1; i < chemin.size(); i++) { ttlesextremite[chemin[i]]->changercouleur(); };
+                            std::cout << "Energie totale : " << floor((*energie)/4.184) << "cal" << std::endl;
+                            if ((*distance) >= 1000) {
+                                std::cout << "Distance totale : " << floor((*distance)/100)/10 << "km" << std::endl;}
+                            else {
+                                std::cout << "Distance totale : " << floor((*distance)) << "m" << std::endl;}
+                            int minutes = (*temps_parcours) / 60;
+                            int secondes = ((*temps_parcours) % 3600) % 60;
+                            std::cout << "Temps de parcours : " << minutes << " min " << secondes << " s" << std::endl;
+                            delete energie;
+                            delete distance;
+                            delete temps_parcours;
+                            for (int i = 1; i < chemin.size()-1; i++) { ttlesextremite[chemin[i]]->changercouleur(); };
                         }
                         else { depart = ttlesextremite[z]; depart->changercouleur(); depart_trouve = true; }
                     }

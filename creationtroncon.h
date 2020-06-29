@@ -69,8 +69,8 @@ public:
 	double longueur();
 	void creerforme();
 	void testaffichage();
-	double* energie_mont(double W = 80, double Cx = 0.15, double f = 1, double F = 2.4);
-	double* energie_desc(double W = 80, double Cx = 0.15, double f = 1, double F = 2.4);
+	std::vector<double> energie_mont(double W = 80, double Cx = 0.15, double f = 1, double F = 2.4);
+	std::vector<double> energie_desc(double W = 80, double Cx = 0.15, double f = 1, double F = 2.4);
 
 };
 

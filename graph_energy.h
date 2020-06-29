@@ -68,7 +68,7 @@ void mise_a_jour_sommet(int s, std::vector<extremite*> ttlesextremites, Energie*
         if((*ita)->debut == ttlesextremites[s]) {
             int b = sommet_to_int((*ita)->fin, ttlesextremites);
             Energie ds = energies[s];
-            double* energie_temps = (*ita)->energie_mont();
+            std::vector<double> energie_temps = (*ita)->energie_mont();
             ds.valeur += energie_temps[0];
             Energie db = energies[b];
             if (ds < db) { 
@@ -82,7 +82,7 @@ void mise_a_jour_sommet(int s, std::vector<extremite*> ttlesextremites, Energie*
         if((*ita)->fin == ttlesextremites[s]) {
             int b = sommet_to_int((*ita)->debut, ttlesextremites);
             Energie ds = energies[s];
-            double* energie_temps = (*ita)->energie_desc();
+            std::vector<double> energie_temps = (*ita)->energie_desc();
             ds.valeur += energie_temps[0];
             Energie db = energies[b];
             if (ds < db) { 
@@ -96,7 +96,7 @@ void mise_a_jour_sommet(int s, std::vector<extremite*> ttlesextremites, Energie*
     }
 };
 
-std::vector<int> chemin_plus_court(std::vector<extremite*> ttlesextremites, std::vector<troncon*> ttlestroncons, extremite* depart, extremite* arrivee) {
+std::vector<int> chemin_plus_court(std::vector<extremite*> ttlesextremites, std::vector<troncon*> ttlestroncons, extremite* depart, extremite* arrivee, double* e, double* d, int* t_p) {
     const int N_sommets = ttlesextremites.size();
     const int N_aretes = ttlestroncons.size();
     int sdeb = sommet_to_int(depart, ttlesextremites);
@@ -114,6 +114,7 @@ std::vector<int> chemin_plus_court(std::vector<extremite*> ttlesextremites, std:
 
     while (P.size()<N_sommets) {
         int s = min_energie(Pc, energies);
+        if ((s==-1) || (energies[sfin] < energies[s])) {break;}
         P.push_back(s);
         mise_a_jour_sommet(s,ttlesextremites,energies, distances, temps, ttlestroncons,predecesseurs);
         int s_Pc = find(s, Pc);
@@ -126,9 +127,9 @@ std::vector<int> chemin_plus_court(std::vector<extremite*> ttlesextremites, std:
         chemin_final.push_back(sommet);
         sommet = predecesseurs[sommet];
     }
-    std::cout << "Energie totale : " << energies[sfin].valeur << "J" << std::endl;
-    std::cout << "Distance totale : " << distances[sfin].valeur << "m" << std::endl;
-    std::cout << "Temps de parcours : " << temps[sfin] << "s" << std::endl;
+    (*e) = energies[sfin].valeur;
+    (*d) = distances[sfin].valeur;
+    (*t_p) = floor(temps[sfin]);
     chemin_final.push_back(sdeb);
     return chemin_final;
     };

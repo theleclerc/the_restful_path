@@ -77,7 +77,7 @@ std::vector<int> chemin_plus_court(std::vector<extremite*> ttlesextremites, std:
     const int N_aretes = ttlestroncons.size();
     int sdeb = sommet_to_int(depart, ttlesextremites);
     int sfin = sommet_to_int(arrivee, ttlesextremites);
-    Distance distances [N_sommets];
+    Distance* distances = new Distance[N_sommets];
     std::vector<int> P;
     std::vector<int> Pc;
     distances[sdeb] = Distance(0,false);
@@ -100,6 +100,7 @@ std::vector<int> chemin_plus_court(std::vector<extremite*> ttlesextremites, std:
     }
     std::cout << "Distance totale : " << distances[sfin].valeur << std::endl;
     chemin_final.push_back(sdeb);
+    delete[] distances;
     return chemin_final;
     };
 #endif

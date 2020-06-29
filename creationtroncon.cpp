@@ -97,24 +97,24 @@ double troncon::longueur() {
     return longueur;
 }
 
-double* troncon::energie_mont(double W = 80, double Cx = 0.15, double f = 1, double F = 2.4) {
-    double E_temps [2];
+std::vector<double> troncon::energie_mont(double W, double Cx, double f, double F) {
+    std::vector<double> E_temps(2);
     std::vector<point>::iterator sommet;
     for(sommet = contenu.begin(); sommet != contenu.end() - 1; sommet++){
         double d = sqrt(pow(sommet->lat - (sommet + 1)->lat, 2) + pow(sommet->lon - (sommet + 1)->lon, 2));
-        double* energie_temps = energie_montee(d, sommet->altit(), (sommet+1)->altit(), W, Cx, f, F);
+        std::vector<double> energie_temps = energie_montee(d, sommet->altit(), (sommet+1)->altit(), W, Cx, f, F);
         E_temps[0] += energie_temps[0];
         E_temps[1] += energie_temps[1];
     }
     return E_temps;
 }
 
-double* troncon::energie_mont(double W = 80, double Cx = 0.15, double f = 1, double F = 2.4) {
-    double E_temps [2];
+std::vector<double> troncon::energie_desc(double W, double Cx, double f, double F) {
+    std::vector<double> E_temps(2);
     std::vector<point>::iterator sommet;
     for(sommet = contenu.begin(); sommet != contenu.end() - 1; sommet++){
         double d = sqrt(pow(sommet->lat - (sommet + 1)->lat, 2) + pow(sommet->lon - (sommet + 1)->lon, 2));
-        double* energie_temps = energie_descente(d, sommet->altit(), (sommet+1)->altit(), W, Cx, f, F);
+        std::vector<double> energie_temps = energie_descente(d, sommet->altit(), (sommet+1)->altit(), W, Cx, f, F);
         E_temps[0] += energie_temps[0];
         E_temps[1] += energie_temps[1];
     }
