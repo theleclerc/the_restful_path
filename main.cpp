@@ -5,6 +5,7 @@
 #include "convertion.h"
 #include <math.h>
 #include "graph_energy.h"
+#include "graph_distance.h"
 using namespace sf;
 using namespace std;
 
@@ -301,7 +302,7 @@ int main() {
                             double* energie = new double;
                             double* distance = new double;
                             int* temps_parcours = new int;
-                            std::vector<int> chemin = chemin_plus_court(ttlesextremite, ttlestroncon, depart, arrivee, energie, distance, temps_parcours);
+                            std::vector<int> chemin = chemin_min_distance(ttlesextremite, ttlestroncon, depart, arrivee, energie, distance, temps_parcours);
                             temps_final = clock();
                             clock_t temps_CPU = (temps_final - temps_initial) * 1000 / CLOCKS_PER_SEC;
                             std::cout << "temps de calcul : " << temps_CPU<< "ms" << std::endl;
