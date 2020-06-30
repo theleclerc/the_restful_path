@@ -5,8 +5,8 @@
 #include <vector>
 #include <iomanip>
 #include <cstring>
-#include <math.h>
 #include "creationtroncon.h"
+#include <math.h>
 #pragma warning(disable : 4996)
 using namespace std;
 

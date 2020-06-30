@@ -1,11 +1,12 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <cstdlib>
 #include <iostream>
 #include "creationtroncon.h"
 #include "convertion.h"
 #include <math.h>
-#include "graph_energy.h"
 #include "graph_distance.h"
+#include "graph_energy.h"
 using namespace sf;
 using namespace std;
 
@@ -165,6 +166,10 @@ void tri(vector<troncon*>& ttlestroncon, vector<troncon*>& ttlestroncontri) {
     }
 }
 
+string inttostr(float a) {
+    return std::to_string(a);
+}
+
 int main() {
     Image image;
     Texture text_carte;
@@ -172,7 +177,7 @@ int main() {
     Vector2u a;
     int x;
     int y;
-    if (not(image.loadFromFile("Capture2.png"))) // Si le chargement du fichier a �chou�
+    if (not(image.loadFromFile("Capture2.png"))) // Si le chargement du fichier a échoué
     {
         std::cout << "Erreur durant le chargement de l'image" << endl;
         return EXIT_FAILURE; // On ferme le programme
@@ -185,7 +190,8 @@ int main() {
         carte = Sprite(text_carte);
         carte.setPosition(0, 0);
     }
-    RenderWindow app(VideoMode(x, y, 32), "Le quartier latin");
+
+    RenderWindow app(VideoMode(1.25 * x, y, 32), "Le quartier latin"); //pas sur que l'argument en float passe. 
     vector<troncon*> ttlestroncon;
     vector<extremite*> ttlesextremite;
     vector<altitude*> ttlesalti;
@@ -194,21 +200,93 @@ int main() {
     string txt = ".txt";
     string nbr;
     string fichier_alti = "liste_altitude.txt";
+
+    Font font;
+    if (!font.loadFromFile("arial.ttf")) {
+        std::cout << "erreur de chargement de la police" << endl;
+    }
+
+    Text text;
+    text.setFont(font);
+    text.setString("Réinitialiser");
+    text.setCharacterSize(24);
+    text.setFillColor(Color::Black);
+    text.setStyle(Text::Bold | Text::Underlined);
+    text.setPosition(1.15 * x, 0.33 * y); // avant c'était text.setPosition(100.f ,100.f), mais je sais pas ce que c'est ".f"
+
+    extremite boutonreboot = extremite(1.05 * x, 0.33 * y, 0);
+    boutonreboot.reboot();
+
+    sf::RectangleShape rectangle(sf::Vector2f(0.25 * x, y));
+    rectangle.setFillColor(sf::Color(255, 255, 255));
+    rectangle.setPosition( x, 0);
+
+    sf::RectangleShape affichage(sf::Vector2f(0.18 * x, 0.24 * y));
+    affichage.setFillColor(sf::Color(255,255,255));
+    affichage.setOutlineColor(Color(11, 187, 11));
+    affichage.setOutlineThickness(2);
+    affichage.setPosition(1.10 * x, 0.66 * y);
+
+    Text txt_distance;
+    txt_distance.setFont(font);
+    txt_distance.setString("Distance");
+    txt_distance.setCharacterSize(18);
+    txt_distance.setFillColor(Color::Blue);
+    txt_distance.setStyle(Text::Bold);
+    txt_distance.setPosition(1.13 * x, 0.70 * y);
+
+    Text txt_temps;
+    txt_temps.setFont(font);
+    txt_temps.setString("Temps");
+    txt_temps.setCharacterSize(18);
+    txt_temps.setFillColor(Color::Blue);
+    txt_temps.setStyle(Text::Bold);
+    txt_temps.setPosition(1.13 * x, 0.78 * y);
+
+    Text txt_energie;
+    txt_energie.setFont(font);
+    txt_energie.setString("Énergie");
+    txt_energie.setCharacterSize(18);
+    txt_energie.setFillColor(Color::Blue);
+    txt_energie.setStyle(Text::Bold);
+    txt_energie.setPosition(1.13 * x, 0.86 * y);
+
+
+    //Création du changement de mode.
+    extremite boutonenergie = extremite(1.05 * x, 0.44 * y, 0);
+    boutonenergie.reboot2();
+    extremite boutondistance = extremite(1.05 * x, 0.55 * y, 0);
+    boutondistance.reboot3();
     
+    Text txt1;
+    txt1.setFont(font);
+    txt1.setString("Energie");
+    txt1.setCharacterSize(24);
+    txt1.setPosition(1.13 * x, 0.44 * y);
+    txt1.setFillColor(Color::Black);
+    Text txt2;
+    txt2.setFont(font);
+    txt2.setString("Distance");
+    txt2.setCharacterSize(24);
+    txt2.setPosition(1.13 * x, 0.55 * y);
+    txt2.setFillColor(Color::Black);
+    bool version;
+    version = true; //mode distance enclenché
     /*chargement_troncon(x, y, fichier, ttlestroncon, ttlesextremite);
     std::cout << "finchargement troncon" << endl;
     chargement_alti(x, y, fichier_alti, ttlesalti);
     std::cout << "fin chargement alti" << endl;
-    std::cout << "D�but d�coupage" << endl;
+    std::cout << "Début découpage" << endl;
     vector<vector<troncon*>> nouvelle_liste;
     vector<vector<extremite*>> nouvelle_extre;
     vector<vector<altitude*>> nouvelle_alti;
     decoupage(nouvelle_liste, nouvelle_extre, nouvelle_alti, ttlestroncon, ttlesextremite, ttlesalti);
-    std::cout << "fin d�coupage" << endl;
+    std::cout << "fin découpage" << endl;
     for (int p = 0; p < nouvelle_liste.size(); p++) {
         reecriture(nouvelle_liste[p], p, nouvelle_alti[p]);
     }*/
     for (int i = 2; i < 6; i++) {
+        std::cout << "ok" << endl;
         for (int j = 2; j < 6; j++) {
             nbr = to_string(i + 8 * j);
             fichier = plan + nbr + txt;
@@ -271,13 +349,16 @@ int main() {
     attribuer_alti(ttlestroncon, ttlesalti, ttlesextremite);*/
     app.clear();
 
-    std:: cout << "fin" << endl;
+    std::cout << "fin" << endl;
     vector <extremite*> trajet;
     vector<extremite*> nvtrajet;
     bool unefois = true;
     bool depart_trouve = false;
-    extremite* depart=nullptr;
+    extremite* depart = nullptr;
     extremite* arrivee;
+    double* e = new double;
+    double* d = new double;
+    int* t_p = new int;
     cout << "fin" << endl;
     while (app.isOpen())
     {
@@ -288,37 +369,61 @@ int main() {
             if (event.type == Event::Closed)
                 app.close();
             else if (event.type == sf::Event::MouseButtonPressed) {
-                for (int z = 0; z < ttlesextremite.size(); z++) {
+                if (shape_contains_cursor((&boutonreboot), app.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y }))) {
+                    if (depart_trouve) {
+                        for (int i = 0; i < ttlesextremite.size(); i++) { ttlesextremite[i]->definircouleur(); }
+                        depart_trouve = false;
+                    }
+                    else { continue; }
+                }
+                if (shape_contains_cursor((&boutondistance), app.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y }))) {
+                    if (version) { continue; }
+                    else {
+                        boutondistance.modifiercouleur(187, 11, 11);
+                        boutonenergie.modifiercouleur(255,255, 255);
+                        version = true;
+                    }
+                }
+                if (shape_contains_cursor((&boutonenergie), app.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y }))) {
+                    if (version) {
+                        boutondistance.modifiercouleur(255, 255, 255);
+                        boutonenergie.modifiercouleur(187, 11, 11);
+                        version = false;
+                    }
+                    else { continue; }
+                }
+                for (int z = 0; z < ttlesextremite.size(); z++) {    
+                    if (shape_contains_cursor(ttlesextremite[z], app.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })) and (not((rectangle).getGlobalBounds().contains(app.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y }))))) {
+                        if (depart_trouve) {   
+                            if (version) {
+                                arrivee = ttlesextremite[z];
+                                arrivee->changercouleur();
 
-                    if (shape_contains_cursor(ttlesextremite[z], app.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y }))) {
-                        if (depart_trouve)
-                        {
-                            arrivee = ttlesextremite[z];
-                            arrivee->changercouleur();
-
-                            clock_t temps_initial;
-                            clock_t temps_final;
-                            temps_initial = clock();
-                            double* energie = new double;
-                            double* distance = new double;
-                            int* temps_parcours = new int;
-                            std::vector<int> chemin = chemin_min_distance(ttlesextremite, ttlestroncon, depart, arrivee, energie, distance, temps_parcours);
-                            temps_final = clock();
-                            clock_t temps_CPU = (temps_final - temps_initial) * 1000 / CLOCKS_PER_SEC;
-                            std::cout << "temps de calcul : " << temps_CPU<< "ms" << std::endl;
-                            std::cout << "chemin calcul�" << std::endl;
-                            std::cout << "Energie totale : " << floor((*energie)/4.184) << "cal" << std::endl;
-                            if ((*distance) >= 1000) {
-                                std::cout << "Distance totale : " << floor((*distance)/100)/10 << "km" << std::endl;}
+                                clock_t temps_initial;
+                                clock_t temps_final;
+                                temps_initial = clock();
+                                std::vector<int> chemin = chemin_min_distance(ttlesextremite, ttlestroncon, depart, arrivee, e, d, t_p);
+                                temps_final = clock();
+                                clock_t temps_CPU = (temps_initial - temps_final) / CLOCKS_PER_SEC * 1000;
+                                txt_temps.setString("Temps"+ inttostr(temps_CPU));
+                                //std::cout << "temps de calcul : " << temps_CPU << "ms" << std::endl;
+                                std::cout << "chemin calculé" << std::endl;
+                                for (int i = 1; i < chemin.size()-1; i++) { ttlesextremite[chemin[i]]->changercouleur(); };
+                                }
                             else {
-                                std::cout << "Distance totale : " << floor((*distance)) << "m" << std::endl;}
-                            int minutes = (*temps_parcours) / 60;
-                            int secondes = ((*temps_parcours) % 3600) % 60;
-                            std::cout << "Temps de parcours : " << minutes << " min " << secondes << " s" << std::endl;
-                            delete energie;
-                            delete distance;
-                            delete temps_parcours;
-                            for (int i = 1; i < chemin.size()-1; i++) { ttlesextremite[chemin[i]]->changercouleur(); };
+                                arrivee = ttlesextremite[z];
+                                arrivee->changercouleur();
+                                clock_t temps_initial;
+                                clock_t temps_final;
+                                temps_initial = clock();
+                                std::vector<int> chemin = chemin_min_energie(ttlesextremite, ttlestroncon, depart, arrivee, e, d, t_p);
+                                temps_final = clock();
+                                clock_t temps_CPU = (temps_initial - temps_final) / CLOCKS_PER_SEC * 1000;
+                                txt_temps.setString("Temps"+ inttostr(temps_CPU));
+                                //std::cout << "temps de calcul : " << temps_CPU << "ms" << std::endl;
+                                std::cout << "chemin calculé" << std::endl;
+                                for (int i = 1; i < chemin.size()-1; i++) { ttlesextremite[chemin[i]]->changercouleur(); };
+                            }
                         }
                         else { depart = ttlesextremite[z]; depart->changercouleur(); depart_trouve = true; }
                     }
@@ -342,14 +447,30 @@ int main() {
         for (int s = 0; s < ttlesextremite.size(); s++) {
             app.draw((*ttlesextremite[s]).afficher());
         }
+
+        app.draw(rectangle);
+        app.draw(affichage);
+        app.draw(boutonreboot.afficher());
+        app.draw(boutonenergie.afficher());
+        app.draw(boutondistance.afficher());
+        app.draw(text);
+        app.draw(txt_distance);
+        app.draw(txt_temps);
+        app.draw(txt_energie);
+        app.draw(txt1);
+        app.draw(txt2);
+
         // Affichage du contenu de la fen?tre ? l'?cran
         app.display();
 
     }
-
+    delete e;
+    delete d;
+    delete t_p;
 
     return 0;
 }
+
 //#include <SFML/Graphics.hpp>
 //#include <cstdlib>
 //#include <iostream>
@@ -389,7 +510,7 @@ int main() {
 //    Vector2u a;
 //    int x;
 //    int y;
-//    if (not(image.loadFromFile("Capture2.png"))) // Si le chargement du fichier a �chou�
+//    if (not(image.loadFromFile("Capture2.png"))) // Si le chargement du fichier a échoué
 //    {
 //        cout << "Erreur durant le chargement de l'image" << endl;
 //        return EXIT_FAILURE; // On ferme le programme
@@ -444,7 +565,7 @@ int main() {
 //
 //    app.clear();
 //
-//    // Affichage de notre carre dans la fen�tre
+//    // Affichage de notre carre dans la fenêtre
 //
 //    cout << "fin" << endl;
 //    bool depart_trouve = false;
@@ -457,7 +578,7 @@ int main() {
 //        Event event;
 //        while (app.pollEvent(event))
 //        {
-//            // Fen�tre ferm�e : on quitte
+//            // Fenêtre fermée : on quitte
 //            if (event.type == Event::Closed)
 //                app.close();
 //            else if (event.type == sf::Event::MouseButtonPressed) {
@@ -487,10 +608,10 @@ int main() {
 //            }
 //        }
 //
-//        // Efface l'�cran (remplissage avec du noir)
+//        // Efface l'écran (remplissage avec du noir)
 //        app.clear();
 //
-//        // Affichage de notre carre dans la fen�tre
+//        // Affichage de notre carre dans la fenêtre
 //        app.draw(carte);
 //        //app.draw(ane2);
 //        //app.draw(ane3);
@@ -500,7 +621,7 @@ int main() {
 //        for (int s = 0; s < ttlesextremite.size(); s++) {
 //            app.draw((*ttlesextremite[s]).afficher());
 //        }
-//        // Affichage du contenu de la fen�tre � l'�cran
+//        // Affichage du contenu de la fenêtre à l'écran
 //        app.display();
 //
 //    }

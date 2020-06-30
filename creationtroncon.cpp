@@ -34,6 +34,24 @@ extremite::extremite(double x, double y,double altitude) : point(x,y,altitude) {
 CircleShape extremite::afficher() {
     return forme;
 }
+void extremite::reboot() {
+    forme.setOutlineColor(Color(255, 255, 255));
+    forme.setFillColor(Color(187, 11, 11));
+    forme.setOutlineThickness(2);
+    forme.setOrigin(30, 30);
+    forme.setRadius(30);
+}
+
+void extremite::reboot2() {
+    forme.setFillColor(Color(255, 255, 255));
+    forme.setOutlineColor(Color(187, 11, 11));
+    forme.setOutlineThickness(5);
+}
+void extremite::reboot3() {
+    forme.setFillColor(Color(187, 11, 11));
+    forme.setOutlineColor(Color(187, 11, 11));
+    forme.setOutlineThickness(5);
+}
 void extremite::changercouleur() {
     if (forme.getFillColor() == Color(255, 255, 255)) {
         forme.setFillColor(Color(0, 0, 0));

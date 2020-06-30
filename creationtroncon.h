@@ -31,20 +31,32 @@ class extremite : public point {
 friend class troncon;
 private:
 	
-	CircleShape forme = CircleShape(5);
 	Texture mytext;
 	bool clique = false;
 	std::vector<int> liste_tron;
+	CircleShape forme = CircleShape(5);
 
 public:
 	
 	extremite(double x, double y,double altitude);
 	FloatRect getGlobalBounds();
 	CircleShape afficher();
+	void reboot();
+	void reboot2();
+	void reboot3();
 	void changercouleur();
 	
 	void ajout_troncon(int nv_etre) {
 		liste_tron.push_back(nv_etre);
+	}
+	void definircouleur() {
+		if (forme.getFillColor() == Color(0, 0, 0)) {
+			forme.setFillColor(Color(255, 255, 255));
+			clique = false;
+		}
+	}
+	void modifiercouleur(int coul, int coul2, int coul3) {
+		forme.setFillColor(Color(coul, coul2, coul3));
 	}
 	
 };
